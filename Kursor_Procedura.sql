@@ -6,7 +6,7 @@ BEGIN TRY
  --- Zapis w logach ---                    
  ---===================================================================================================---                    
                     
- insert into dab.data.Procedures_LOG_History (ProcedureName, startTime) values (object_name(@@procid), getdate())                    
+ insert into data.Procedures_LOG_History (ProcedureName, startTime) values (object_name(@@procid), getdate())                    
  set @i = @@identity                    
   ---===================================================================================================---                    
  --- KOD ---                    
@@ -45,7 +45,7 @@ BEGIN TRY
     select CorporateKey from letters.Users    
     where CorporateKey in ('ND52EB','WR52HH','CF58EN','OK19YD','DJ13UF','RI56SR','BN25LP','DO70RY','NO99VL','IV91BK','QS89AH','BK53QP','AM62KB','BU83GA','PF35ZB','BI98TW','FN10ED', 'CA63CU')      
 	-- print 'test1'
- --otwieram transakcje, która  nie pozwoli na wpisanie wiecej niz 5 spraw dla danego okresu (tylko tyle spraw chcemy miec do audytu)
+ --otwieram transakcje, ktÃ³ra  nie pozwoli na wpisanie wiecej niz 5 spraw dla danego okresu (tylko tyle spraw chcemy miec do audytu)
  BEGIN TRANSACTION   
  OPEN Pracownicy    
  FETCH NEXT FROM Pracownicy INTO @Pracownik    
@@ -80,7 +80,7 @@ BEGIN TRY
 	 --declare @query nvarchar(max) = ''
 	 --declare @roznica int = 0
 
-	 --FastTracki- niskie wyp³aty -> przygotowanie tabelki  
+	 --FastTracki- niskie wypÂ³aty -> przygotowanie tabelki  
 	 if OBJECT_ID('tempdb..#Fast_Track') is not null drop table #Fast_Track  
 	 SELECT --top 2                
 	  DataDecyzjiRRRRMC             
@@ -155,7 +155,7 @@ BEGIN TRY
 	   Select TOP 2 * from #Odmowa   
 	   order by row_number() over (partition by TypRoszczenia order by (Select 1)), NewID()    
 	  end    
-	 else --teraz opcja dla Pracowników, którzy przygotowywuj¹ opinie medyczne    
+	 else --teraz opcja dla PracownikÃ³w, ktÃ³rzy przygotowywujÂ¹ opinie medyczne    
 	  begin    
 	   INSERT INTO reports.CL_Audyt_Wewnetrzny (DataDecyzjiRRRRMC ,Pracownik, LiniaBiznesowa , NrClaim , NrKontraktu , TypKontraktU, TypUmowy , TypRoszczenia, StatusClaim , StatusKomponentu , StatusPaymentRequesta    
 	   , KwotaPaymentRequesta, UzytkownikRejestrujacyKomponent, UzytkownikDecyzja, UzytkownikRejestrujacyWyplate,UzytkownikAkceptujacyWyplate,  Kategoria  )    
@@ -167,7 +167,7 @@ BEGIN TRY
 	 set @Odmowa = @RowNumber    
 	 print 'Dla pracownika ' +@Pracownik + ' ' + cast(@RowNumber as varchar(2)) + ' odmow'    
   
-	 --Akceptacje na drug¹ rêkê- tabelka  
+	 --Akceptacje na drugÂ¹ rÃªkÃª- tabelka  
 	 if OBJECT_ID('tempdb..#Akceptacja_Druga_Reka') is not null drop table #Akceptacja_Druga_Reka  
 	 SELECT     
 	  DataDecyzjiRRRRMC    
@@ -186,7 +186,7 @@ BEGIN TRY
 	  , UzytkownikDecyzja    
 	  , UzytkownikRejestrujacyWyplate    
 	  , UzytkownikAkceptujacyWyplate    
-	  , N'Akceptacja na drug¹ rêkê' Kategoria    
+	  , N'Akceptacja na drugÂ¹ rÃªkÃª' Kategoria    
 	 into #Akceptacja_Druga_Reka  
 	 FROM reports.CL_Payments    
 	 where uzytkownikrejestrujacywyplate = @Pracownik    
@@ -211,8 +211,8 @@ BEGIN TRY
 	 set @licznik = @RowNumber + @licznik    
 	 print 'Dla pracownika ' +@Pracownik + ' ' + cast(@RowNumber as varchar(2)) + ' akceptacji na druga reke'    
     
-	 --GDY NIE NAZBIERA SIÊ 5 SPRAW Z POWY¯EJ TO PATRZE NA AKCEPTCAJE   
-	 --Tworzê tabelkê z akceptacjami   
+	 --GDY NIE NAZBIERA SIÃŠ 5 SPRAW Z POWYÂ¯EJ TO PATRZE NA AKCEPTCAJE   
+	 --TworzÃª tabelkÃª z akceptacjami   
 	 IF OBJECT_ID('TEMPDB..#Akceptacja') IS NOT NULL drop table #Akceptacja   
 	 SELECT --top 5     
 	  DataDecyzjiRRRRMC    
@@ -243,7 +243,7 @@ BEGIN TRY
 	  and StatusPaymentRequesta = 'PAID'    
 	  and StatusKomponentu = 'PAIDOUT' 
 
-	  --uzupe³niam akceptacjami
+	  --uzupeÂ³niam akceptacjami
 	 if @Pracownik not in ('PF35ZB', 'CF58EN') 
 	 begin   
 		set @roznica = 5 - @licznik    
@@ -313,7 +313,7 @@ BEGIN TRY
 	 set @licznik = @RowNumber + @licznik    
 	 print 'Dla pracownika ' +@Pracownik + ' ' + cast(@RowNumber as varchar(2)) + ' opinii medycznych'    
   
-	 --LOSOWE UZUPE£NIANIE BRAKUJ¥CYCH SPRAW -> PRZYGOTOWANIE TABEL
+	 --LOSOWE UZUPEÂ£NIANIE BRAKUJÂ¥CYCH SPRAW -> PRZYGOTOWANIE TABEL
 	 set @roznica = 5 - @licznik    
 	 if @roznica>0 
 	 begin  
@@ -341,7 +341,7 @@ BEGIN TRY
 		 , StatusPaymenta collate Polish_CI_AS, KwotaPay, UzytkownikRejestrujacyKomponent, UzytkownikDecyzja, cast(UzytkownikRejestrujacy as nvarchar(max)) , cast(Akceptujacy as nvarchar(max)), Kategoria   
 		FROM #Opinia_medyczna   
 		) AGR     
-		--'DOPYCHAMY LOSOWO' BRAKUJ¥CE SPRAWY  
+		--'DOPYCHAMY LOSOWO' BRAKUJÂ¥CE SPRAWY  
 
 		if @Pracownik  in ('PF35ZB', 'CF58EN')    
 		begin      
@@ -370,7 +370,7 @@ BEGIN TRY
 			set @RowNumber = @@ROWCOUNT    
 			set @LosoweUzupelnienie = @RowNumber
 			    
-			print 'Dla pracownika ' +@Pracownik + ' ' + cast(@RowNumber as varchar(2)) + N' losowych uzupe³nieñ'
+			print 'Dla pracownika ' +@Pracownik + ' ' + cast(@RowNumber as varchar(2)) + N' losowych uzupeÂ³nieÃ±'
 		end  
 	  end
    
@@ -392,7 +392,7 @@ BEGIN TRY
   END    --konier kursora
   CLOSE Pracownicy    
   DEALLOCATE Pracownicy    
-  print N'Kursor siê zakoñczy³'  
+  print N'Kursor siÃª zakoÃ±czyÂ³'  
  -- ROLLBACK TRANSACTION
 
 --starttest---------------------------------------------------------------------------
@@ -401,7 +401,7 @@ BEGIN TRY
   IF  ( SELECT top 1 COUNT(*) FROM reports.CL_Audyt_Wewnetrzny group by Pracownik, DataDecyzjiRRRRMC order by 1 desc) > 5  
   begin  
 	ROLLBACK TRANSACTION
-	select  N'Rollback- s¹ ju¿ dane na ten miesi¹c'  
+	select  N'Rollback- sÂ¹ juÂ¿ dane na ten miesiÂ¹c'  
   end  
   ELSE   
   begin  
@@ -412,7 +412,6 @@ BEGIN TRY
   if 1=0    
   select * from letters.Users    
   where corporatekey in (select Pracownik from reports.CL_Audyt_Wewnetrzny_Uwagi where SumaSpraw <5 and DataDecyzjiRRRRMC = '201907' )    
-  --kurpiewska, biniewicz, napiorkowska    
     
  ---===================================================================================================---                    
  --- Zapis w logach ---                    
